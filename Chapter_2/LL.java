@@ -106,24 +106,136 @@ public class LL
     Node currNode = head;
     Hashtable<Integer,Boolean> ht = new Hashtable<Integer,Boolean>();
     Node previous = null;
-    while(currNode != null){
+    while(currNode != null)
+    {
       if(ht.containsKey(currNode.getData()))
       {
         previous.setNext(currNode.getNext());
-      }else
+      }
+      else
       {
         ht.put(currNode.getData(), true);
         previous = currNode;
+      }
+      currNode = currNode.getNext();
+    }
+  }
+
+  public void getKthNode(int kth)
+  {
+    Node currNode = head;
+    Node runner = head;
+
+    int size = 1;
+
+    while(runner.hasNext())
+    {
+      runner = runner.getNext();
+      size++;
+    }
+
+    int goTo = size - kth;
+    if(goTo < 0 || kth <= 0)
+    {
+      // bad case
+      System.out.println("Can't get the " + kth + " to last element.");
+      return;
+    }
+    for(int i = 0; i < goTo; i++)
+    {
+      currNode = currNode.getNext();
+    }
+
+    System.out.println("The " + kth + " to last element is: " + currNode.getData());
+  }
+
+  public void removeWithAccess(int k)
+  {
+      Node currNode = head;
+
+      for(int i = 1; i < k; i++)
+      {
+        currNode = currNode.getNext();
+        if(currNode == null)
+        {
+          System.out.println("Invalid node index");
+          return;
+        }
+      }
+
+      if(!currNode.hasNext())
+      {
+        currNode = null;
+        System.out.println("This is the last element");
+      }
+      else
+      {
+        currNode.setData(currNode.getNext().getData());
+        currNode.setNext(currNode.getNext().getNext());
+      }
+  }
+
+  public LL partitionX(int x)
+  {
+    System.out.println("Partioning around value: " + x);
+    LL lowList = new LL();
+    LL highList = new LL();
+
+    Node currNode = head;
+    while(currNode != null)
+    {
+      if(currNode.getData() >= x)
+      {
+        highList.add(currNode.getData());
+      }
+      else
+      {
+        lowList.add(currNode.getData());
       }
 
       currNode = currNode.getNext();
     }
 
+    Node lastLow = lowList.getHead();
+    Node highHead = highList.getHead();
+
+    if(lastLow == null) return highList;
+    else if(highHead == null) return lowList;
+    else
+    {
+      while(lastLow.hasNext())
+      {
+        lastLow = lastLow.getNext();
+      }
+
+      lastLow.setNext(highHead);
+    }
+
+    return lowList;
+  }
+
+  public void getMiddleNode(int mid)
+  {
+    Node currNode = head;
+    Node runner = head;
+
+    while(runner != null && runner.hasNext()){
+
+      for(int i = 0; i < 2; i++)
+      {
+        runner = runner.getNext();
+        if(runner == null) break;
+      }
+
+      currNode = currNode.getNext();
+
+    }
+
+    System.out.println("The middle element is: " + currNode.getData());
   }
 
   public void print()
   {
-    System.out.println("\nPrinting List...");
     Node currNode = head;
     if(currNode != null)
     {
@@ -132,11 +244,17 @@ public class LL
         System.out.print(currNode.getData() + " ");
         currNode = currNode.getNext();
       }
+      System.out.print("\n");
     }
     else
     {
       System.out.println("List is empty...");
     }
+  }
+
+  public Node getHead()
+  {
+    return this.head;
   }
 
   public class Node
@@ -154,6 +272,10 @@ public class LL
     public int getData()
     {
       return data;
+    }
+    public void setData(int data)
+    {
+      this.data = data;
     }
     public void setNext(Node node)
     {
