@@ -36,6 +36,27 @@ public class LL
     size++;
   }
 
+  public void add(Node node)
+  {
+    if(head == null)
+    {
+      head = node;
+    }
+    else
+    {
+
+      Node currNode = head;
+      while(currNode.hasNext())
+      {
+        currNode = currNode.getNext();
+
+      }
+
+      currNode.setNext(node);
+    }
+
+    size++;
+  }
   public boolean remove(int index)
   {
     Node currNode = head;
@@ -214,6 +235,90 @@ public class LL
     return lowList;
   }
 
+  public static LL addLists(LL list1, LL list2)
+  {
+
+    LL returnList = new LL();
+    Node currL1 = list1.getHead();
+    Node currL2 = list2.getHead();
+    int sum;
+    int carry;
+    boolean overflow = false;
+
+    if(currL1 == null) return list2;
+    else if (currL2 == null) return list1;
+    else
+    {
+      while(currL1 != null || currL2 != null)
+      {
+        if(currL1 == null) sum = currL2.getData();
+        else if (currL2 == null) sum = currL1.getData();
+        else sum = currL1.getData() + currL2.getData();
+
+        if(overflow) sum++;
+
+        if(sum > 9)
+        {
+          sum = sum - 10;
+          overflow = true;
+        }
+        else{
+          overflow = false;
+        }
+
+        returnList.add(sum);
+
+        if(currL1 != null) currL1 = currL1.getNext();
+        if(currL2 != null) currL2 = currL2.getNext();
+      }
+
+      if(overflow)
+      {
+        returnList.add(1);
+      }
+    }
+
+    return returnList;
+
+  }
+
+  public LL createCircularList()
+  {
+    LL returnList = new LL();
+    Node n1 = new Node(1);
+    Node n2 = new Node(2);
+    Node n3 = new Node(3);
+    returnList.add(n1);
+    returnList.add(n2);
+    returnList.add(n3);
+    returnList.add(n2);
+    return returnList;
+
+  }
+
+  public void isCircular(LL list)
+  {
+    HashMap<Node,Integer> visited = new HashMap<Node,Integer>();
+    Node currNode = list.getHead();
+    int index = 0;
+    while(currNode != null)
+    {
+      if(visited.containsKey(currNode))
+      {
+        // Repeated Node
+        System.out.println("Beginning of the loop is: " + currNode.getData() + ", at index: " + visited.get(currNode));
+        break;
+      }
+      else
+      {
+        visited.put(currNode, index);
+      }
+
+      index++;
+      currNode = currNode.getNext();
+    }
+  }
+
   public void getMiddleNode(int mid)
   {
     Node currNode = head;
@@ -232,6 +337,47 @@ public class LL
     }
 
     System.out.println("The middle element is: " + currNode.getData());
+  }
+
+  public boolean isPalindrome()
+  {
+
+    Node currNode = head;
+    Stack<Integer> values = new Stack<Integer>();
+
+    System.out.println("Size: " + size);
+    boolean leftover = size % 2 == 1? true:false;
+    int mid = this.size/2;
+
+    if(size == 1) return true;
+
+    for(int i = 0; i < mid; i++)
+    {
+      values.push(currNode.getData());
+      System.out.println("pushing: " + currNode.getData());
+      currNode = currNode.getNext();
+    }
+
+    if(leftover)
+    {
+      currNode = currNode.getNext();
+      mid++;
+    }
+
+    for(int i = mid; i < size; i++)
+    {
+      System.out.println("popping: " + currNode.getData());
+
+      if(!(currNode.getData() == values.pop()))
+      {
+        return false;
+      }
+
+      currNode = currNode.getNext();
+    }
+
+    return true;
+
   }
 
   public void print()
